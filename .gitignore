@@ -1,4 +1,5 @@
 .htaccess
+.gitignore
 admin.php
 cron.php
 index.php

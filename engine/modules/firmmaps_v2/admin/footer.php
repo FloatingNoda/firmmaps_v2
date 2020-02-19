@@ -5,7 +5,6 @@ if (!defined('DATALIFEENGINE') || !defined('LOGGED_IN')) {
 ?>
 
 
-
 <div class="panel">
 	<div class="panel-content">
 		<div class="panel-body">
