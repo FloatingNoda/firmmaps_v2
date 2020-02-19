@@ -2,7 +2,7 @@
 if (!defined('DATALIFEENGINE') || !defined('LOGGED_IN')) {
     die('Hacking attempt!');
 }
-// <?php include MODULE_DIR . '/admin/text_2.php';
+
 ?>
 <script src="<?php echo MODULE_URL?>/admin/js/admin.js"></script>
 
