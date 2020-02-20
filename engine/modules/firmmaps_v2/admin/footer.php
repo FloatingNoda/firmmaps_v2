@@ -1,6 +1,6 @@
 <?php
 if (!defined('DATALIFEENGINE') || !defined('LOGGED_IN')) {
-    die('Hacking attempt!!!');
+    die('Hacking attempt!');
 }
 ?>
 
