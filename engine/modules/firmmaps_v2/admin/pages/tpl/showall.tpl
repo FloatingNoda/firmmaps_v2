@@ -1,8 +1,10 @@
-﻿
+﻿<div style="padding-left:10px;padding-top:10px;margin-left:10px;">
+	{list}
+</div>
 <table class="table table-hover">
   <thead>
     <tr>
-    	<th scope="col">#</th>
+    	<th scope="col">ID</th>
     	<th scope="col">Название</th>
     	<th scope="col">Регион</th>
 		<th scope="col">Район</th>

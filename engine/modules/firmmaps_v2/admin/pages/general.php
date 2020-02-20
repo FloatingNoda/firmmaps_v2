@@ -34,17 +34,36 @@ $tpl->dir = ROOT_DIR . '/engine/modules/firmmaps_v2/admin/pages/tpl/';
 define( 'TEMPLATE_DIR', $tpl->dir );
 //--------------------------------------------------------------------------
 
+
 $tpl->load_template ( 'showall.tpl' );
+$table = PREFIX."_firmmaps_catalog";  // название таблицы
+$fields  = 'COUNT(*)'; // нужные поля, * - все поля
+$where="1=1";
+$multirow = 1; // забирать ли один ряд или несколько
+$start = 0; // начальное значение выборки
+$limit = 0; // количество записей для выборки, 0 - выбрать все
+$m = $dle_api->load_table ($table,$fields,$where,$multirow,$start,$limit);
+$count=$m[0]['COUNT(*)'];
+$curpage=$_GET['list'];
+if ($_GET['show_by']==0) $tpl->set ( '{list}', "");
+else{
+	$listCount=intdiv($count,$_GET['show_by']);
+	if ($count%$_GET['show_by']>0) $listCount++;
+	for ($i=1;$i<=$listCount;$i++){
+		if ($i==$curpage) $temp.="<b>[$i]</b>";
+		else $temp.="<a onclick='listchange($i)'>[$i]</a>";
+	}
+	$tpl->set ( '{list}', $temp);
+}
+
 $table = PREFIX."_firmmaps_catalog AS cat LEFT JOIN ".PREFIX."_firmmaps_region AS reg ON (reg.id=cat.region) LEFT JOIN ".PREFIX."_firmmaps_city AS city ON (city.id=cat.city)";  // название таблицы
 $fields  = 'cat.*, reg.name AS name_region, city.name AS name_city'; // нужные поля, * - все поля
 $where="1=1";
 $multirow = 1; // забирать ли один ряд или несколько
-$start = 0; // начальное значение выборки
-$limit = 20; // количество записей для выборки, 0 - выбрать все
+$start = ($curpage-1)* $_GET['show_by']; // начальное значение выборки
+$limit = $_GET['show_by']; // количество записей для выборки, 0 - выбрать все
 
 $m = $dle_api->load_table ($table,$fields,$where,$multirow,$start,$limit);
-//echo 'Количество новостей на сайте: '.count($m);
-//$tpl->set('data',array(1,2,3,4,5,6,7,8,9)); 
 
 $i=0;
 $temp="";	
@@ -53,7 +72,7 @@ foreach($m as $data){
 	$i++;
 	
 	$temp.="<tr>";
-	$temp.="<th scope='row'>$i</th>";
+	$temp.="<th scope='row'>".$data['id']."</th>";
 	$temp.="<td>".$data['name']."</td>";
 	$temp.="<td>".$data['name_region']."</td>";
 	$temp.="<td>".$data['name_city']."</td>";
@@ -63,19 +82,6 @@ foreach($m as $data){
 	$temp.="<td><a href='javascript:edit(".$data['id'].");'><i class='fa fa-pencil' style='font-size: 30px;color:green;'></i></a><a href='javascript:del(".$data['id'].");'><i class='fa fa-remove' style='font-size: 30px;color: red;'></i></a></td>";
 	$temp.="</tr>";
 }
-		 
-/*	$i++;
-	$tpltemp->load_template ( 'str.tpl' );
-	$tpltemp->set ( '{1}', $i);
-	$tpltemp->set ( '{2}', $data['name']);
-	$tpltemp->set ( '{3}', $data['name_region']);
-	$tpltemp->set ( '{4}', $data['name_city']);
-	$tpltemp->set ( '{5}', $data['stars']);
-	$tpltemp->set ( '{6}', gmdate("Y-m-d H:i:s", $data['createNote']));
-	$tpltemp->set ( '{7}', gmdate("Y-m-d H:i:s", $data['changeNote']));
-	$tpltemp->set ( '{id}', $data['id']);
-	$tpltemp->compile ( 'str' );	*/
-
 $tpl->set ( '{table_data}', $temp);
 $tpl->compile ( 'showall' );
 echo $tpl->result['showall'];
